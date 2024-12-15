@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عباقرة المتفوقين</title>
+    <link rel="stylesheet"  href="styles/board.css">
+    
+</head>
+<body>
+        <img src="imgs/logo.png" style="width:200px;border-radius:50%;" alt="">
+        <div style="width:100%;display: flex;justify-content: center;" >
+            <div style="text-align: center;margin-bottom: 14px;">
+                <B>السؤال رقم : </B><span class="qn">0</span>
+            </div>
+        </div>
+    <div class="question" style="direction: ltr;">
+        في انتظار الادمن ....
+    </div>    
+    <input type="hidden" class="interval">
+    <input type="hidden" class="timeout">
+    <input type="hidden" class="answer">
+   
+<br>
+<br>
+    <div style="display: flex;justify-content: center; gap:120px" >
+        <div>
+            تحت إشراف <br>
+            أ / محمد ثروت -
+            أ / محمد فتحي
+        </div>
+        
+        <div>
+            مدير المدرسة <br>
+            أ/ عبدالله عبد المحسن
+        </div>
+        
+    </div>
+    <audio id="teet">
+        <source src="audio/buzzer.wav" />
+    </audio>
+    <audio id="tiktik">
+        <source src="audio/tiktik.mp3" repeat />
+    </audio>
+    <br>
+    
+  
+    
+
+    <pop>
+        <div class="window">
+            <div class="count">
+                <img src="imgs/clock.png" class="clock" alt="">    
+                <div id="counter" >
+                    20
+                </div>
+            </div>
+           
+        </div>
+    </pop>
+
+
+    <div class="with">
+    </div>
+
+</body>
+</html>
+
+<script>  
+    var chances = [true , true]
+    var IsPlaying = false ;
+
+    // وافر محبتي واحترامي لشخصكم الكرييم 
+    // دومي ❤️ خالد
+
+    function $(e){
+        return document.querySelector(e);
+    }
+    function handleData(e) {
+        //{"destination" : "board" , "question" : " من هو الدحيح " , "answers" :  ["1" ,"2" ,"3" ,"4"] }
+        var data = JSON.parse(e.data)
+        console.log(data)
+        if(data.destination == 'student'){
+            $('pop').style = 'display:none';
+            IsPlaying = false;
+            $('#tiktik').pause();
+            clearInterval($('.interval').value)
+            clearTimeout($('.timeout').value)
+
+            
+            $('.with').innerHTML = ``;
+            $('.question').style = 'background:#1a4;color:white';
+           
+            $('.question').innerHTML = 'إجابة صحيحة';
+            setTimeout(()=>{
+                $('.question').style = 'background:#eee;color:black';
+            },3000)
+
+        }
+        if(data.rechance){
+            chances = [true,true]
+        }
+        if(data.destination == 'board'){
+            if(data.question){
+                $('.qn').innerHTML++;
+                $('.question').innerHTML = '';
+                $('.question').innerHTML = data.question
+                $('.answer').value = data.answer
+            
+                chances = [true,true]
+
+            }
+
+
+            //{"destination" : "board" , "teet" : "true" , "user" : "آدم عبده " }
+
+            
+
+            if(data.teet && chances[data.team] && !IsPlaying){
+            
+
+                $('#teet').play();
+                $('.with').innerHTML = ` الاجابة مع <h3>${data.user}</h3>`;
+                $('#counter').innerHTML = 20;
+                $('pop').style = 'display:grid';
+
+                chances[data.team] = false;
+                
+                IsPlaying = true;
+
+                    $('#tiktik').play();
+                    $('.count').style = 'display:flex';
+                    var timer =  setInterval(()=>{
+                        $('#counter').innerHTML--;
+                    },1000)
+                    $('.interval').value = timer
+                    var timeout = setTimeout(()=>{
+                        clearInterval(timer)
+                        $('#tiktik').pause();
+                        $('#counter').innerHTML = 20;
+                        $('.with').innerHTML = ``;
+                        $('pop').style = 'display:none';
+                        IsPlaying
+                         = false; 
+                    } , 20000)
+                    $('.timeout').value = timeout
+                    
+            }
+
+            if(data.false == 'true'){
+                $(".question").style = "background:#702;color:white;" ;
+                setTimeout(()=>{
+                    $(".question").style = "background:#eee;color:black;" ;
+                } , 3000)
+                $('pop').style = 'display:none';
+                IsPlaying = false;
+                $('#tiktik').pause();
+                clearInterval($('.interval').value)
+                clearTimeout($('.timeout').value)
+                $('.with').innerHTML = ``;
+
+                if(!chances[0] && !chances[1]){
+                    $('.question').innerHTML =  'الاجابة هي ' + $('.answer').value
+                }
+
+
+            }
+        }
+	}
+    
+
+	document.body.onload = ()=>{
+        var websocket = new WebSocket("ws://10.10.10.2:8090/demo/php-socket.php"); 
+		websocket.onmessage = function(event) {
+			var Data = JSON.parse(event.data);
+            handleData(Data)
+		};
+    }
+
+</script>

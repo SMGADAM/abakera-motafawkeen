@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div>
+
+        
+    <video controls style="display: none;">
+        <source src="audio/intro.mp4">
+    </video>
+        <div class="slider" >
+            <div class="main">
+            </div>
+            <div style="position: absolute;margin: auto ; margin-top: -100px ; top:50%;left:0;width: 100%;" >
+                <div>
+                    <img src="logo.png" onclick="slide()" width="400px"  style="margin-top:-120px ;" alt="">
+                </div>
+                <div>
+                    مدير ادارة المدرسة <br>
+                    <b>أ / عبد الله عبد المحسن </b>
+                </div>
+                
+                <div>
+                    
+                    برمجة وتصميم <br>
+                    <b> آدم محمدين </b>
+                </div>
+                
+                <div>
+                    فكرة واشراف <br>
+                    <b>أ / محمد ثروت <br> أ / محمد فتحي </b>
+                </div>
+    
+    
+                <div>
+                    فريق الاعداد  <br>
+                    <b>  خالد وليد انور<br> محمد مدحت رشاد <br> عبد الله عماد  <br> محمد احمد ابراهيم الطوخي    </br>محمد عصام حافظ  <br>
+                </div>
+                
+                <div>
+                    تقديم  <br>
+                    <b>حامد فهمي زهرة </b>
+                </div>
+        
+                <div>
+                    اخراج  <br>
+                    <b>آدم محمدين</b>
+                </div>
+    
+    
+            </div>
+    
+        </div>
+    
+    </div>
+
+
+</body>
+</html>
+<style>
+    body{
+        color:white;
+        font-family: cairo;
+        background:black;
+        overflow: hidden;
+
+    }
+    b{
+        font-size: 25px;
+    }
+    .slider{
+        position: relative;
+        display: flex;
+        width:100%;
+        height:100vh;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        transform: scale(1.2);
+        transition:0.1s;
+    }
+    .slider div{
+        margin-bottom:200px;
+    }
+</style>
+
+
+<script>
+    function slide(){
+    document.querySelector('video').play()
+    var x = 0
+    var iner = setInterval(()=>{
+        document.querySelector('.slider').style = `top:-${x}px`;
+        x+=10
+
+        if(x == 5500){
+            clearInterval(iner)
+            document.querySelector('video').pause()
+            setTimeout(()=>{
+
+                window.location.href = 'http://10.10.10.2/abakera/board.html'
+            },1000)
+        }
+        } ,100)
+
+    }
+</script>
+
+

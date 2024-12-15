@@ -1,0 +1,90 @@
+@font-face {
+    font-family: "cairo";
+    src:url("../fonts/cairo.ttf");
+  }
+
+*{
+    font-family: cairo !important;
+
+}
+body{
+    background:linear-gradient(to top , rgba(0,0,0,0.7 ) , rgba( 0,0,0,0.7)) , url('../imgs/bg-board.jpg');
+    background-size:cover;
+    color:white;
+    // font-family: casiro;
+    text-align: center;
+}
+
+
+*{
+    direction:rtl;
+}
+
+.question{
+    margin:auto;
+    border:solid 3px white;
+    width:800px;
+    padding:20px;
+    background:  #eee;
+    color:black;
+    border-radius:7.5px ;
+    font-weight: bolder;
+    min-height: 30px;
+    font-size: 25px !important;
+}
+
+.answers{
+    display: flex;
+    width:700px;
+    flex-wrap: wrap;;
+    margin:10px auto;
+    justify-content: space-between;
+}
+.answer{
+    padding: 15px;
+    border-radius: 15px ;
+    
+    border: solid 3px white;
+    width:43%;
+    margin:10px 0px ;
+}
+.with h3{
+    margin-top:-5px;
+}
+#counter{
+    margin: 10px;
+    font-size: 25px;
+    font-weight: bold;
+}
+.clock{
+    // position: fixed;
+    // top:10px;
+    // right:10px;
+    width:50px;
+    // opacity: 0.5    ;
+
+}
+.count{
+    // display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.window{
+    display: grid;
+    position:fixed;
+    top:0;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    // background: #6a3;
+    color:white !important;
+}
+
+#counter{
+    font-size: 45px !important;
+}
+

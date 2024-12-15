@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عباقرة المتفوقين</title>
+    <link rel="stylesheet"  href="styles/board.css">
+    <link rel="stylesheet"  href="styles/bs.css">
+</head>
+<body>
+   
+    <div class="result" style="display: grid; align-items: center ; justify-content: center;">
+        <h1>  نهائي مسابقة عباقرة المتفوقين (الموسم الاول) </h1>
+        <h3><span class="deg0" >0</span> <span>:</span> <span class="deg1">0</span></h3>
+    </div>
+    <div style="display:none;gap:30px;justify-content: center; flex-wrap: wrap;">
+        <table class="t0 table table-striped bg-white" >
+            
+            <thead>
+              <tr>
+                <th scope="col">اسم الطالب</th>
+                <th scope="col">الدرجة</th>
+              </tr>
+            </thead>
+            <tbody>
+             
+            </tbody>
+          </table>
+    
+          <table class=" t1 table table-striped bg-white" >
+            <thead>
+              <tr>
+                <th scope="col">اسم الطالب</th>
+                <th scope="col" >الدرجة</th>
+              </tr>
+            </thead>
+            <tbody>
+             
+            </tbody>
+          </table>
+        
+    </div>
+
+</body>
+</html>
+
+<script>  
+    var chances = [true , true]
+
+    function $(e){
+        return document.querySelector(e);
+    }
+    var teams = [[],[]]
+    function handleData(e) {
+        var data = JSON.parse(e.data)
+        if(data.type == 'add' && !(teams[0].includes(data.ip) || teams[0].includes(data.ip) )){
+            var tr = `
+            <tr ip='${data.ip}' >
+                <td user='${data.user}' >${data.user}</td>
+                <td degree='deg'>0</td>
+            </tr>
+            `
+            $(`.t${data.team} tbody`).innerHTML += tr
+            teams[data.team].push(data.ip);
+
+        }
+
+        if(data.username){
+            var rows = document.querySelectorAll('[user]')
+            rows.forEach((el)=>{
+                if((el.innerHTML).trim() == (data.username).trim()){
+                    el.parentNode.querySelector('[degree]').innerHTML++
+                }
+            })
+            console.log(data.team)
+            $(`.deg${data.team}`).innerHTML++
+        }
+
+        if(data.minus){
+            var rows = document.querySelectorAll('[user]')
+            rows.forEach((el)=>{
+                if((el.innerHTML).trim() == (data.minus).trim()){
+                    el.parentNode.querySelector('[degree]').innerHTML--
+                }
+            })
+            console.log(data.team)
+            $(`.deg${data.team}`).innerHTML--
+        }
+
+
+        
+        
+    }
+    
+    
+
+	document.body.onload = ()=>{
+        var websocket = new WebSocket("ws://10.10.10.2:8090/demo/php-socket.php"); 
+		websocket.onmessage = function(event) {
+			var Data = JSON.parse(event.data);
+            
+
+            if(Data.message_type == 'disconnected'){
+                var ip = Data.message;
+                $(`[ip='${ip}']`).remove()
+                teams[0].shift('ip')
+                teams[1].shift('ip')
+            }
+
+            
+            handleData(Data)
+		};
+    }
+
+</script>
+
+<style>
+    table{
+        max-width:550px !important;
+        border-radius: 5px;
+        overflow: hidden;
+
+        display:none;
+    }
+    .result{
+        color:white;
+        font-weight: bolder;
+        margin: 60px 0px  ;
+    }
+
+
+    .result span{
+        font-size: 250px !important;
+
+    }
+</style>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عباقرة المتفوقين</title>
+    <link rel="stylesheet"  href="styles/board.css">
+</head>
+<body>
+    
+    <h2>عباقرة المتفوقين </h2>
+    <h4>الطالب : <span class="username" ></span></h4>
+    <h3 class="ip"></h3>
+    <div style="display: flex; justify-content: center; gap: 150px;">
+        <div style="display: grid;" >
+            <b>الاجابات الصحيحة</b>
+            <B style="font-size:50px;" class="degree">00</B>
+
+        </div>
+
+        <div class="btndiv">
+            <img src="imgs/btn.png" class="btn" width="160px" alt="">
+        </div>
+    </div>
+
+
+<br>
+<br>
+   
+    <audio id="teet">
+        <source src="audio/teet.mp3" />
+    </audio>
+
+    <audio id="tiktik">
+        <source src="audio/tiktik.mp3" />
+    </audio>
+    <br>
+    
+  
+    
+
+
+
+</body>
+</html>
+
+<script>  
+
+    function $(e){
+        return document.querySelector(e);
+    }
+    $('.username').innerHTML = localStorage['username']
+    function handleData(e) {
+        var data = JSON.parse(e.data)
+        // {"username" : "adam" , "destination" : "student"}
+        if((data.minus || 'null').trim() == (localStorage['username']).trim() ){
+            $('.degree').innerHTML--
+        }
+
+        if((data.username  || 'null' ).trim() == (localStorage['username']).trim() && data.destination == 'student'){
+            $('.degree').innerHTML++
+        } 
+        
+	}
+    
+	document.body.onload = ()=>{
+        var websocket = new WebSocket("ws://10.10.10.2:8090/demo/php-socket.php"); 
+		websocket.onmessage = function(event) {
+			var Data = JSON.parse(event.data);
+			handleData(Data)
+		};
+        $('.btn').onclick = ()=>{
+
+            var messageJSON = {
+				chat_user: 'student',
+				chat_message: JSON.stringify({"destination" : "board" , "teet" : "true" , "user" : `${localStorage['username']}` , "team" : `${localStorage['team']}` })
+			};
+            websocket.send(JSON.stringify(messageJSON))
+        
+        }
+        
+        var xhr = new XMLHttpRequest;
+        xhr.open('GET' , 'getmyip.php')
+        xhr.onreadystatechange = function (){
+            if(this.status == 200 && this.readyState == 4){
+                    var messageJSON = {
+                        chat_user: 'student',
+                        chat_message: JSON.stringify({"destination" : "result" , "type" : "add" , "user" : `${localStorage['username']}` , "team" : `${localStorage['team']}` , "ip" : `${this.responseText}` })
+                    };
+                    setTimeout(()=>{
+                        websocket.send(JSON.stringify(messageJSON))
+                    } , 1000)
+            }
+        }
+        xhr.send()
+
+    }
+
+</script>
+
+
+<style>
+    .btndiv:active {
+  opacity: 0.7;
+}
+</style>
